@@ -32,7 +32,7 @@ def tokenize_sample_list(sample_list):
         p2 = tokenize_string(p2)
         p1, p2 = np.array(p1), np.array(p2)
         sample.update({'p1':p1, 'p2':p2})
-    tokenized_sample_list.append(sample)
+        tokenized_sample_list.append(sample)
     return tokenized_sample_list
 
 
@@ -41,9 +41,9 @@ def tokenize_string(AA_seq): # 20 + buffer 1
     s = []
     for char in AA_seq:
         if char in AA_CHAR:
-            s.append(AA_CHAR.index(char))   
+            s.append(AA_CHAR.index(char)) # 0 - 19
         else:
-            s.append(len(AA_CHAR) + 1)
+            s.append(len(AA_CHAR))
     return s
 
 
@@ -52,6 +52,7 @@ if __name__ == '__main__':
 
     sample_list = preprocess_txt(fn='./raw/Positive.txt', forced_label=1)
     pos_sample_list = tokenize_sample_list(sample_list)
+    print(len(pos_sample_list))
     
     sample_list = preprocess_txt(fn='./raw/Negative.txt', forced_label=0)
     neg_sample_list = tokenize_sample_list(sample_list)
