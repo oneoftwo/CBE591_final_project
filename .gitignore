@@ -1,4 +1,10 @@
+# data related 
 /data/preprocessed
 /data/raw
+
+# results 
 /save
+
+# cahce files
+/__pycache__
 
