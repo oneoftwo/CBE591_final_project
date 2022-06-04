@@ -6,6 +6,7 @@
 !/save
 /save/*
 !/save/plot_loss_history.py
+!/save/*.png
 
 # cahce files
 /__pycache__
