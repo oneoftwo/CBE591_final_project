@@ -40,7 +40,7 @@ if __name__ == '__main__':
     from torch.utils.data import DataLoader
     import _dataset as DATASET 
 
-    model = MODEL.BaselineModel(seq_len=256, hid_dim=48)
+    model = MODEL.AblationModel(seq_len=256, hid_dim=48)
     optimizer = optim.Adam(model.parameters(), lr=1e-5, weight_decay=1e-8)
     
     train_dataset = DATASET.PPIDataset('./data/preprocessed/preprocessed.pkl', max_len=256)
@@ -60,5 +60,5 @@ if __name__ == '__main__':
         print(train_acc, valid_acc)
         print()
         
-        torch.save(model.cpu().state_dict(), f'./save/exp_ablation/model_{epoch_idx}.pt')
+        torch.save(model.cpu().state_dict(), f'./save/exp/model_{epoch_idx}.pt')
 

@@ -3,7 +3,9 @@
 /data/raw
 
 # results 
-/save
+!/save
+/save/*
+!/save/plot_loss_history.py
 
 # cahce files
 /__pycache__

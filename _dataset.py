@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import pickle
 
+
 class PPIDataset(torch.utils.data.Dataset):
     def __init__(self, sample_list_fn, max_len=1000):
         super().__init__()
