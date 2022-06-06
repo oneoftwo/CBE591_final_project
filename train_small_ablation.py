@@ -12,8 +12,8 @@ def process(model, data_loader, args, optimizer=None):
 
     total_loss, correct, total = 0, 0, 0
     for batch in tqdm(data_loader):
-        p1, p2 = batch['p1'], batch['p2']
-        m1, m2 = batch['m1'], batch['m2']
+        p1, p2 = batch['p1'].cuda(), batch['p2'].cuda()
+        m1, m2 = batch['m1'].cuda(), batch['m2'].cuda()
         pred_target_p = model(p1, p2, m1, m2).cpu()
         
         loss = criterion(pred_target_p, batch['target'].float())
@@ -35,23 +35,31 @@ def process(model, data_loader, args, optimizer=None):
 
 
 if __name__ == '__main__':
+    
+    seq_len = 256
+    hid_dim = 64
+    bs = 32
+    lr = 1e-5
+
     import _model as MODEL
     from torch import optim
     from torch.utils.data import DataLoader
     import _dataset as DATASET 
-
-    model = MODEL.BaselineModel(seq_len=256, hid_dim=48)
-    optimizer = optim.Adam(model.parameters(), lr=1e-5, weight_decay=1e-8)
     
-    train_dataset = DATASET.PPIDataset('./data/preprocessed/preprocessed.pkl', max_len=256)
+    model = MODEL.AblationModel(seq_len=seq_len, hid_dim=hid_dim)
+    model = nn.DataParallel(model, device_ids=[0, 1])
+
+    optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-8)
+    
+    train_dataset = DATASET.PPIDataset('./data/preprocessed/preprocessed.pkl', max_len=seq_len)
     n = len(train_dataset)
     train_dataset, valid_dataset = torch.utils.data.random_split(train_dataset, [int(n*0.8), n - int(n*0.8)])
     
-    train_loader = DataLoader(train_dataset, batch_size=24, shuffle=True, drop_last=True, num_workers=4)
-    valid_loader = DataLoader(valid_dataset, batch_size=24, shuffle=True, drop_last=True, num_workers=4)
-
+    train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True, drop_last=True, num_workers=8)
+    valid_loader = DataLoader(valid_dataset, batch_size=bs, shuffle=True, drop_last=True, num_workers=8)
 
     for epoch_idx in range(1, 1001):
+        model.cuda()
         model, train_loss, train_acc = process(model, train_loader, None, optimizer=optimizer)
         model, valid_loss, valid_acc = process(model, valid_loader, None)
         
@@ -60,5 +68,6 @@ if __name__ == '__main__':
         print(train_acc, valid_acc)
         print()
         
-        torch.save(model.cpu().state_dict(), f'./save/exp_ablation/model_{epoch_idx}.pt')
+        model.cpu()
+        torch.save(model.cpu().state_dict(), f'./save/exp_small_ablation/model_{epoch_idx}.pt')
 

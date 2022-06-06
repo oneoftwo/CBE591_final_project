@@ -58,10 +58,39 @@ if __name__ == '__main__':
     neg_sample_list = tokenize_sample_list(sample_list)
 
     total_sample_list = pos_sample_list + neg_sample_list
-    pickle.dump(total_sample_list, open('./preprocessed/preprocessed.pkl', 'wb'))
+    # pickle.dump(total_sample_list, open('./preprocessed/preprocessed.pkl', 'wb'))
+    
+    
+    # plpt distribution 
+    
+    from matplotlib import pyplot as plt 
+    import seaborn as sns
+    from matplotlib import colors
 
+    # plot 1d 
+    # """
+    len_list = [len(x['p1']) for x in total_sample_list] + [len(x['p2']) for x in total_sample_list]
+    len_list = [x for x in len_list if x < 4096]
+    sns.distplot(len_list, bins=128)
+    plt.title('protein length distribution')
+    plt.savefig('./data_len.png')
+    plt.clf()
+    # """
 
-
-
-
+    # plot 2d distribution 
+    """
+    len_list_1 = [len(x['p1']) for x in total_sample_list]
+    len_list_2 = [len(x['p2']) for x in total_sample_list]
+    x, y = [], []
+    for idx in range(len(len_list_1)):
+        if len_list_1[idx] < 4096 and len_list_2[idx] < 4096:
+            x.append(len_list_1[idx])
+            y.append(len_list_2[idx])
+    
+    plt.hist2d(x, y, norm=colors.LogNorm(), cmap=plt.cm.Blues, bins=[128, 128])
+    plt.title('protein-protein length distribution (log scale)')
+    plt.colorbar()
+    plt.savefig('./data_len_2d.png')
+    plt.clf()
+    """
 

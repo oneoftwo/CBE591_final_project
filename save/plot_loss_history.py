@@ -1,6 +1,8 @@
 
 
-fn = './exp/output.txt'
+fn = './exp_small_ablation/output.txt'
+fn = './output.txt'
+
 
 f = open(fn, 'r')
 line_list = f.readlines()
