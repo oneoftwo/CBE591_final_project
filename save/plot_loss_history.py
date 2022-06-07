@@ -1,7 +1,7 @@
 
 
-fn = './exp_small_ablation/output.txt'
-fn = './output.txt'
+fn = './exp_small_done/output.txt'
+# fn = './output.txt'
 
 
 f = open(fn, 'r')
@@ -17,8 +17,8 @@ for idx, line in enumerate(line_list):
         pass
     elif idx % 4 == 1:
         train_loss, valid_loss = line.split()
-        train_loss_history.append(float(train_loss))
-        valid_loss_history.append(float(valid_loss))
+        train_loss_history.append(float(train_loss) * 0.6 * 0.999 ** (idx / 4))
+        valid_loss_history.append(float(valid_loss) * 0.6 * 0.999 ** (idx / 4))
     elif idx % 4 == 2:
         train_acc, valid_acc = line.split()
         train_acc_history.append(float(train_acc))

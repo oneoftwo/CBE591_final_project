@@ -42,8 +42,8 @@ import numpy as np
 
 print(len(all_set))
 
-sample_data = all_set[3963]
-# sample_data = all_set[1002]
+# sample_data = all_set[3963]
+sample_data = all_set[1002]
 
 
 print(sample_data['protein_1'])

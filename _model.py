@@ -179,4 +179,4 @@ if __name__ == '__main__':
     x = model(p1, p2, m1, m2)
     a = model.get_attention(p1, p2, m1, m2)
     print(a)
-    
+    print(model)
